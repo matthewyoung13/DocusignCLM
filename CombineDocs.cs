@@ -1,11 +1,17 @@
-string docsXml   = _context.XmlVariables["FolderDocuments"].ValueString;
-string typesRaw  = _context.XmlVariables["PackageTypes"].ValueString;
-string isdaId    = _context.XmlVariables["ISDA_DocID"].ValueString;
-string nettingId = _context.XmlVariables["NettingReview_DocID"].ValueString;
+string docsXml  = _context.XmlVariables["FolderDocuments"].ValueString;
+string typesRaw = _context.XmlVariables["PackageTypes"].ValueString;
+string existing = _context.XmlVariables["CombinedDocIDs"].ValueString;
 
 System.Collections.Generic.List<string> ids = new System.Collections.Generic.List<string>();
-if (!string.IsNullOrEmpty(isdaId)) ids.Add(isdaId.Trim());
-if (!string.IsNullOrEmpty(nettingId) && !ids.Contains(nettingId.Trim())) ids.Add(nettingId.Trim());
+
+if (!string.IsNullOrEmpty(existing))
+{
+    foreach (string s in existing.Split('|'))
+    {
+        string t = s.Trim();
+        if (t != "" && !ids.Contains(t)) ids.Add(t);
+    }
+}
 
 if (string.IsNullOrEmpty(docsXml) || string.IsNullOrEmpty(typesRaw))
 {
